@@ -1,98 +1,196 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+## Imix -- Servicio de Procesamiento con IA (NestJS + MongoDB)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+------------------------------------------------------------------------
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Contexto del reto
 
-## Description
+Servicio backend que:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+-   Recibe solicitudes vía API REST
+-   Persiste información en MongoDB
+-   Simula procesamiento con IA
+-   Retorna resultado procesado
+-   Está diseñado bajo principios de seguridad, escalabilidad y
+    separación de responsabilidades
 
-## Project setup
+------------------------------------------------------------------------
 
-```bash
-$ npm install
-```
+# Diseño Arquitectónico
 
-## Compile and run the project
+## 🏗 Enfoque Arquitectónico
 
-```bash
-# development
-$ npm run start
+Se propone una arquitectura en capas basada en separación de
+responsabilidades:
 
-# watch mode
-$ npm run start:dev
+Cliente (Web / Mobile)\
+↓\
+API Gateway / BFF\
+↓\
+Backend (NestJS)\
+├── Controller Layer\
+├── Application Layer (Services)\
+├── Domain Layer (Entities / Enums)\
+├── Infrastructure Layer (MongoDB / IA)\
+↓\
+MongoDB
 
-# production mode
-$ npm run start:prod
-```
+------------------------------------------------------------------------
 
-## Run tests
+## 📦 Componentes
 
-```bash
-# unit tests
-$ npm run test
+### Controller
 
-# e2e tests
-$ npm run test:e2e
+-   Expone endpoints REST
+-   Valida DTOs
+-   No contiene lógica de negocio
 
-# test coverage
-$ npm run test:cov
-```
+### Application Service
 
-## Deployment
+-   Orquesta el flujo
+-   Gestiona estados
+-   Maneja errores
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### AI Service (Mock)
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+-   Simula integración externa
+-   Desacoplado del core
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+### Persistencia
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+-   MongoDB + Mongoose
+-   Esquemas tipados
 
-## Resources
+------------------------------------------------------------------------
 
-Check out a few resources that may come in handy when working with NestJS:
+## 🔄 Flujo
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+1.  Cliente envía POST /requests
+2.  DTO valida payload
+3.  Se guarda documento con estado PROCESSING
+4.  Se ejecuta IA mock
+5.  Se actualiza estado:
+    -   COMPLETED
+    -   FAILED
+6.  Se retorna documento final
 
-## Support
+------------------------------------------------------------------------
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## ⚠️ Manejo de errores
 
-## Stay in touch
+### Negocio
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+-   Error IA → estado FAILED
+-   HTTP 200 con resultado controlado
 
-## License
+### Infraestructura
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+-   Error DB → HTTP 500
+-   Log interno
+
+------------------------------------------------------------------------
+
+## 🔐 Seguridad y protección de información
+
+-   ValidationPipe global
+-   class-validator
+-   No exposición de stack traces
+-   Variables sensibles vía ConfigModule
+
+### Protección de datos sensibles
+
+Para evitar consultar DB en cada request:
+
+-   Claims relevantes dentro del JWT
+-   Cache distribuido (Redis)
+-   Backend de procesamiento no tiene conciencia de seguridad
+
+------------------------------------------------------------------------
+
+## 👤 Manejo de sesión
+
+-   JWT (Access + Refresh Token)
+-   Backend stateless
+-   Seguridad delegada a API Gateway o Auth Service
+
+------------------------------------------------------------------------
+
+## 🔑 Integración con SSO
+
+Si somos responsables del SSO:
+
+-   Implementar OAuth2 / OpenID Connect
+-   Identity Provider (Keycloak/Auth Server propio)
+-   Backend valida JWT firmado
+-   No se capturan credenciales en cada aplicación
+
+------------------------------------------------------------------------
+
+# Implementación Backend
+
+Tecnologías:
+
+-   NestJS
+-   MongoDB
+-   Mongoose
+-   TypeScript
+
+Estados del Request:
+
+PENDING | PROCESSING | COMPLETED | FAILED
+
+------------------------------------------------------------------------
+
+# Criterio Técnico
+
+# 🚀 Modelo de despliegue recomendado
+
+Cloud Provider (AWS / GCP)\
+├── Load Balancer\
+├── Backend Containers (Auto Scaling)\
+├── MongoDB Atlas\
+├── Redis\
+└── API Gateway
+
+------------------------------------------------------------------------
+
+## 📈 Escalabilidad
+
+-   Servicio stateless
+-   Escalable horizontalmente
+-   Preparado para alta concurrencia
+
+------------------------------------------------------------------------
+
+## 🔧 Mejoras futuras en producción
+
+-   Cola de procesamiento (BullMQ)
+-   Workers dedicados
+-   Circuit breaker para IA
+-   Observabilidad (Prometheus + Grafana)
+-   Rate limiting
+-   Auditoría y trazabilidad
+-   Pruebas unitarias y e2e
+-   CI/CD pipeline
+-   Versionado de API
+
+------------------------------------------------------------------------
+
+# 🧠 Límites de Responsabilidad
+
+| Servicio | Responsabilidad |
+| :--- | :--- |
+| **Auth Service** | Autenticación |
+| **API Gateway** | Seguridad y Rate Limiting |
+| **Processing Service** | Lógica de negocio |
+| **IA Service** | Procesamiento IA |
+| **Frontend** | Presentación |
+
+------------------------------------------------------------------------
+
+# 🛠 Instalación
+
+npm install npm run start:dev
+
+Variables:
+
+DB_URI=mongodb://localhost:27017/imix PORT=3000
